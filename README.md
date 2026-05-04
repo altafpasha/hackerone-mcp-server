@@ -75,19 +75,22 @@ H1_API_TOKEN=your_api_token_here
 
 Edit your Claude Desktop config file:
 
-| OS | Path |
+| OS | Config file path |
 |---|---|
+| Linux | `~/.config/Claude/claude_desktop_config.json` |
 | macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
 | Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
 
-Add the following block (create the file if it doesn't exist):
+Add the following block (create the file if it doesn't exist).
+
+**Linux / macOS:**
 
 ```json
 {
   "mcpServers": {
     "hackerone": {
-      "command": "python",
-      "args": ["/absolute/path/to/h1_mcp_server.py"],
+      "command": "python3",
+      "args": ["/home/yourname/hackerone-mcp-server/h1_mcp_server.py"],
       "env": {
         "H1_USERNAME": "your_h1_username",
         "H1_API_TOKEN": "your_api_token_here"
@@ -97,10 +100,82 @@ Add the following block (create the file if it doesn't exist):
 }
 ```
 
-> On macOS/Linux use `"python3"` instead of `"python"`.  
-> Replace the path with the actual absolute path to `h1_mcp_server.py`.
+**Windows:**
+
+```json
+{
+  "mcpServers": {
+    "hackerone": {
+      "command": "python",
+      "args": ["C:\\Users\\yourname\\hackerone-mcp-server\\h1_mcp_server.py"],
+      "env": {
+        "H1_USERNAME": "your_h1_username",
+        "H1_API_TOKEN": "your_api_token_here"
+      }
+    }
+  }
+}
+```
+
+> Replace the path with the actual absolute path to `h1_mcp_server.py` on your machine.
 
 Fully quit and reopen Claude Desktop. You should see the MCP plug icon in the toolbar.
+
+---
+
+## Linux Setup (Full Walkthrough)
+
+This covers a clean install on Ubuntu/Debian and similar distros.
+
+```bash
+# 1. Install Python 3 if not already present
+sudo apt update && sudo apt install -y python3 python3-pip git
+
+# 2. Clone the repo
+git clone https://github.com/altafpasha/hackerone-mcp-server.git
+cd hackerone-mcp-server
+
+# 3. Install dependencies
+pip3 install -r requirements.txt
+
+# 4. Set credentials
+cp .env.example .env
+nano .env   # fill in H1_USERNAME and H1_API_TOKEN
+
+# 5. Test the server runs (Ctrl+C to stop)
+python3 h1_mcp_server.py
+```
+
+Then create the Claude Desktop config:
+
+```bash
+mkdir -p ~/.config/Claude
+nano ~/.config/Claude/claude_desktop_config.json
+```
+
+Paste:
+
+```json
+{
+  "mcpServers": {
+    "hackerone": {
+      "command": "python3",
+      "args": ["/home/yourname/hackerone-mcp-server/h1_mcp_server.py"],
+      "env": {
+        "H1_USERNAME": "your_h1_username",
+        "H1_API_TOKEN": "your_api_token_here"
+      }
+    }
+  }
+}
+```
+
+Use `which python3` if you need the full interpreter path (e.g. `/usr/bin/python3`).
+
+Restart Claude Desktop. The MCP plug icon should appear in the toolbar.
+
+> **Using a virtualenv?** Point `"command"` to the venv interpreter instead:  
+> `"command": "/home/yourname/hackerone-mcp-server/.venv/bin/python3"`
 
 ---
 
@@ -200,7 +275,8 @@ The server exposes these tools to Claude. You can call them naturally in convers
 | `401 Unauthorized` | Token is wrong or expired — regenerate at HackerOne settings |
 | `404 Not Found` | Program handle is wrong — use `search_program` to find the correct handle |
 | MCP server not loading | Check Claude Desktop logs: **Help → Show Logs** |
-| `python: command not found` | Use `python3` on macOS/Linux or ensure Python is in your `PATH` |
+| `python: command not found` | Use `python3` on Linux/macOS; run `which python3` to get the full path and use that in the config |
+| MCP server crashes on Linux | Run `python3 h1_mcp_server.py` manually in a terminal to see the error output |
 
 ---
 
