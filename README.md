@@ -36,7 +36,7 @@ Ask Claude things like **"Show me Shopify's scope on HackerOne"** or **"What are
 ### 2. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/hackerone-mcp-server.git
+git clone https://github.com/altafpasha/hackerone-mcp-server.git
 cd hackerone-mcp-server
 ```
 
