@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "hackerone": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-e", "H1_USERNAME",
+        "-e", "H1_API_TOKEN",
+        "hacker1-mcp-server"
+      ],
+      "env": {
+        "H1_USERNAME": "YOUR_H1_USERNAME",
+        "H1_API_TOKEN": "YOUR_H1_API_TOKEN"
+      }
+    }
+  }
+}

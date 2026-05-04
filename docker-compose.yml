@@ -1,0 +1,8 @@
+services:
+  h1-mcp:
+    build: .
+    image: hacker1-mcp-server
+    stdin_open: true
+    environment:
+      - H1_USERNAME=${H1_USERNAME}
+      - H1_API_TOKEN=${H1_API_TOKEN}
